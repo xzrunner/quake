@@ -1,0 +1,5 @@
+quake/
+projects/*
+
+!projects/quake.vcxproj
+!projects/quake.vcxproj.filters
