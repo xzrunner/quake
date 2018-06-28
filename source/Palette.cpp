@@ -1,4 +1,5 @@
 #include "quake/Palette.h"
+#include "quake/ColorMap.h"
 
 #include <boost/filesystem.hpp>
 
@@ -38,14 +39,29 @@ void Palette::LoadFromFile(const std::string& filepath)
 void Palette::IndexedToRgb(const unsigned char* indexed, size_t size,
 	                       unsigned char* rgb) const
 {
-	for (size_t i = 0; i < size; ++i)
+	if (m_data)
 	{
-		auto index = static_cast<size_t>(indexed[i]);
-		assert(index < m_size);
-		for (size_t j = 0; j < 3; ++j)
+		for (size_t i = 0; i < size; ++i)
 		{
-			auto c = m_data[index * 3 + j];
-			rgb[i * 3 + j] = c;
+			auto index = static_cast<size_t>(indexed[i]);
+			assert(index < m_size);
+			for (size_t j = 0; j < 3; ++j)
+			{
+				auto c = m_data[index * 3 + j];
+				rgb[i * 3 + j] = c;
+			}
+		}
+	}
+	else
+	{
+		const int sz = sizeof(COLOR_MAP);
+		for (size_t i = 0; i < size; ++i)
+		{
+			auto index = static_cast<size_t>(indexed[i]);
+			assert(index < 256);
+			for (size_t j = 0; j < 3; ++j) {
+				rgb[i * 3 + j] = COLOR_MAP[index][j];
+			}
 		}
 	}
 }

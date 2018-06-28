@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\quake\ColorMap.h" />
     <ClInclude Include="..\..\..\include\quake\Palette.h" />
     <ClInclude Include="..\..\..\include\quake\TextureManager.h" />
     <ClInclude Include="..\..\..\include\quake\WadFileLoader.h" />
