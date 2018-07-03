@@ -96,7 +96,7 @@ void WadFileLoader::Load(const std::string& wad_filepath)
 		uint32_t mip_h = height;
 
 		auto& rc = ur::Blackboard::Instance()->GetRenderContext();
-		int tex_id = rc.CreateTextureID(width, height, ur::TEXTURE_RGB, MIP_LEVEL != 1);
+		int tex_id = rc.CreateTextureID(width, height, ur::TEXTURE_RGB, MIP_LEVEL);
 		for (int i = 0; i < MIP_LEVEL; ++i)
 		{
 			size_t pixel_sz = mip_w * mip_h;
