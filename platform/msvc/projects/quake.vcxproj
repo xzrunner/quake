@@ -12,11 +12,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\quake\ColorMap.h" />
+    <ClInclude Include="..\..\..\include\quake\Lightmaps.h" />
     <ClInclude Include="..\..\..\include\quake\Palette.h" />
     <ClInclude Include="..\..\..\include\quake\TextureManager.h" />
     <ClInclude Include="..\..\..\include\quake\WadFileLoader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\source\Lightmaps.cpp" />
     <ClCompile Include="..\..\..\source\Palette.cpp" />
     <ClCompile Include="..\..\..\source\TextureManager.cpp" />
     <ClCompile Include="..\..\..\source\WadFileLoader.cpp" />
@@ -64,7 +66,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\painting2\include;..\..\..\..\bs\include;..\..\..\..\unirender\include;..\..\..\..\external\boost\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\painting2\include;..\..\..\..\bs\include;..\..\..\..\unirender\include;..\..\..\..\model\include;..\..\..\..\external\boost\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -78,7 +80,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\painting2\include;..\..\..\..\bs\include;..\..\..\..\unirender\include;..\..\..\..\external\boost\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;..\..\..\..\cu\src;..\..\..\..\sm\src\sm;..\..\..\..\painting2\include;..\..\..\..\bs\include;..\..\..\..\unirender\include;..\..\..\..\model\include;..\..\..\..\external\boost\include;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
