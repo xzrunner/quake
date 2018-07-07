@@ -36,7 +36,7 @@ private:
 
 	uint8_t m_lightmaps[MAX_LIGHTMAPS * BPP * BLOCK_WIDTH * BLOCK_HEIGHT];
 
-	std::unique_ptr<ur::Texture> m_textures[MAX_LIGHTMAPS];
+	ur::TexturePtr m_textures[MAX_LIGHTMAPS];
 
 	CU_SINGLETON_DECLARATION(Lightmaps);
 

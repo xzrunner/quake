@@ -5,6 +5,7 @@
 #include <bs/ImportStream.h>
 #include <unirender/Blackboard.h>
 #include <unirender/RenderContext.h>
+#include <unirender/Texture.h>
 
 #include <fstream>
 #include <vector>
@@ -104,14 +105,14 @@ void WadFileLoader::Load(const std::string& wad_filepath)
 			unsigned char* rgb = new unsigned char[rgb_sz];
 			m_palette.IndexedToRgb((unsigned char*)buf + offset[i], pixel_sz, rgb);
 
-			rc.UpdateTexture(tex_id, rgb, mip_w, mip_h, 0, i);
+			rc.UpdateTexture(tex_id, rgb, mip_w, mip_h, 0, i, ur::TEXTURE_WARP_REPEAT);
 			delete[] rgb;
 
 			mip_w /= 2;
 			mip_h /= 2;
 		}
 
-		auto tex = std::make_unique<pt2::Texture>(width, height, tex_id, ur::TEXTURE_RGB);
+		auto tex = std::make_shared<ur::Texture>(&rc, width, height, ur::TEXTURE_RGB, tex_id);
 		TextureManager::Instance()->Add(name, tex);
 	}
 

@@ -9,9 +9,15 @@ TextureManager::TextureManager()
 {
 }
 
-void TextureManager::Add(const std::string& name, std::unique_ptr<pt2::Texture>& tex)
+void TextureManager::Add(const std::string& name, ur::TexturePtr& tex)
 {
-	m_name2tex.insert({ name, std::move(tex) });
+	m_name2tex.insert({ name, tex });
+}
+
+ur::TexturePtr TextureManager::Query(const std::string& name) const
+{
+	auto itr = m_name2tex.find(name);
+	return itr == m_name2tex.end() ? nullptr : itr->second;
 }
 
 }
