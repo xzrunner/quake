@@ -79,7 +79,10 @@ void WadFileLoader::Load(const std::string& wad_filepath)
 	for (int i = 0; i < header.numentries; ++i)
 	{
 		auto& entry = entries[i];
-		assert(entry.size == entry.dsize && entry.type == 'D' && entry.cmprs == 0);
+		if (entry.type != 'D') {
+			continue;
+		}
+		assert(entry.size == entry.dsize && entry.cmprs == 0);
 
 		fin.seekg(entry.offset);
 		fin.read(buf, entry.dsize);
