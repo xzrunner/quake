@@ -368,10 +368,8 @@ void MapParser::ParseFace()
 		texture_name = "";
 	}
 
-	MapFace face;
-	face.vertices[0] = p1 * SCALE;
-	face.vertices[1] = p2 * SCALE;
-	face.vertices[2] = p3 * SCALE;
+	BrushFace face;
+	face.plane = sm::Plane(p1, p2, p3);
 	face.tex_name = texture_name;
 	std::transform(face.tex_name.begin(), face.tex_name.end(), face.tex_name.begin(), ::tolower);
     if (m_format == MapFormat::Valve)

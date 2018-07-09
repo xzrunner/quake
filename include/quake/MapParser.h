@@ -79,6 +79,7 @@ protected:
 	void ParseBrushFaces(MapFormat::Type format);
 
 	void Reset();
+
 private:
 	void SetFormat(MapFormat::Type format);
 
@@ -119,7 +120,7 @@ private:
 	int m_world_entry_idx = -1;
 
 	MapEntity* m_curr_entity = nullptr;
-	std::vector<MapFace> m_curr_faces;
+	std::vector<BrushFace> m_curr_faces;
 
 	typedef MapTokenizer::Token Token;
 

@@ -3,6 +3,7 @@
 #include "quake/MapAttributes.h"
 
 #include <SM_Vector.h>
+#include <SM_Plane.h>
 
 #include <vector>
 #include <string>
@@ -10,24 +11,45 @@
 namespace quake
 {
 
-struct MapFace
+struct TexCoordSystem
+{
+	size_t   index;
+	sm::vec3 x_axis;
+	sm::vec3 y_axis;
+
+}; // TexCoordSystem
+
+struct BrushFace
 {
 	std::string tex_name;
 
-	sm::vec3 vertices[3];
+	sm::Plane             plane;
+	std::vector<sm::vec3> vertices;
 
+	// texcoords
+	TexCoordSystem tc_sys;
 	sm::vec2 offset;
-	float    angle;
+	float    angle = 0;
 	sm::vec2 scale;
 
-}; // MapFace
+	void SortVertices();
+
+	void InitTexCoordSys();
+
+	sm::vec2 CalcTexCoords(const sm::vec3& pos, float tex_w, float tex_h) const;
+
+	void AddVertex(const sm::vec3& v);
+
+}; // BrushFace
 
 struct MapBrush
 {
-	MapBrush(const std::vector<MapFace>& faces)
+	MapBrush(const std::vector<BrushFace>& faces)
 		: faces(faces) {}
 
-	std::vector<MapFace> faces;
+	void BuildVertices();
+
+	std::vector<BrushFace> faces;
 
 }; // MapBrush
 
