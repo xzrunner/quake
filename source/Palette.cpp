@@ -22,6 +22,7 @@ Palette::~Palette()
 void Palette::LoadFromFile(const std::string& filepath)
 {
 	auto ext = boost::filesystem::extension(filepath);
+	std::transform(ext.begin(), ext.end(), ext.begin(), tolower);
 	if (ext == ".lmp")
 	{
 		std::ifstream fin(filepath, std::ios::binary | std::ios::ate);
