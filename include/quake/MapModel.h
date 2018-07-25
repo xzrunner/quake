@@ -4,9 +4,13 @@
 
 #include <SM_Vector.h>
 #include <SM_Plane.h>
+#include <SM_Cube.h>
+#include <halfedge/Polyhedron.h>
 
 #include <vector>
 #include <string>
+
+namespace he { class Polyhedron; }
 
 namespace quake
 {
@@ -44,12 +48,16 @@ struct BrushFace
 
 struct MapBrush
 {
-	MapBrush(const std::vector<BrushFace>& faces)
-		: faces(faces) {}
+	MapBrush(const std::vector<BrushFace>& faces);
 
 	void BuildVertices();
 
+	void BuildGeometry();
+	void RebuildGeometry(const sm::cube& world_bound);
+
 	std::vector<BrushFace> faces;
+
+	he::PolyhedronPtr geometry = nullptr;
 
 }; // MapBrush
 

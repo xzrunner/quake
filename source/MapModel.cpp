@@ -136,6 +136,13 @@ void BrushFace::AddVertex(const sm::vec3& v)
 // class MapBrush
 //////////////////////////////////////////////////////////////////////////
 
+MapBrush::MapBrush(const std::vector<BrushFace>& faces)
+	: faces(faces)
+{
+	//static sm::cube WORLD_BOUND(1024, 1024, 1024);
+	//RebuildGeometry(WORLD_BOUND);
+}
+
 void MapBrush::BuildVertices()
 {
 	// create vertices
@@ -174,6 +181,22 @@ void MapBrush::BuildVertices()
 		f.SortVertices();
 		f.InitTexCoordSys();
 	}
+}
+
+void MapBrush::BuildGeometry()
+{
+	std::vector<std::vector<sm::vec3>> faces_pos;
+	faces_pos.reserve(faces.size());
+	for (auto& face : faces) {
+		faces_pos.push_back(face.vertices);
+	}
+
+	geometry = std::make_shared<he::Polyhedron>(faces_pos);
+}
+
+void MapBrush::RebuildGeometry(const sm::cube& world_bound)
+{
+	geometry = std::make_shared<he::Polyhedron>(world_bound);
 }
 
 }
