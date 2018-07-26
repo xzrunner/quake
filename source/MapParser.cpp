@@ -430,7 +430,7 @@ void MapParser::ParseFace()
         }
     }
 
-    const sm::vec3 normal = (p3 - p1).Cross(p2 - p1).Normalized();
+    const sm::vec3 normal = (p2 - p1).Cross(p3 - p1).Normalized();
 	if (fabs(normal.x) < FLT_EPSILON &&
 		fabs(normal.y) < FLT_EPSILON &&
 		fabs(normal.z) < FLT_EPSILON) {

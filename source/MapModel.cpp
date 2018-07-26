@@ -67,17 +67,17 @@ void BrushFace::SortVertices()
 		}
 	}
 
-	//// fix back faces
-	//assert(vertices.size() > 2);
-	//sm::vec3 normal = (vertices[2] - vertices[0]).Cross(vertices[1] - vertices[0]).Normalized();
-	//if (normal.Dot(plane.normal) < -SM_LARGE_EPSILON) {
-	//	std::reverse(std::begin(vertices), std::end(vertices));
-	//}
+	// fix back faces
+	assert(vertices.size() > 2);
+	sm::vec3 normal = (vertices[1] - vertices[0]).Cross(vertices[2] - vertices[0]).Normalized();
+	if (normal.Dot(plane.normal) < -SM_LARGE_EPSILON) {
+		std::reverse(std::begin(vertices), std::end(vertices));
+	}
 }
 
 void BrushFace::InitTexCoordSys()
 {
-	sm::vec3 normal = (vertices[2] - vertices[0]).Cross(vertices[1] - vertices[0]).Normalized();
+	sm::vec3 normal = (vertices[1] - vertices[0]).Cross(vertices[2] - vertices[0]).Normalized();
 
 	size_t best_idx = 0;
 	float  best_dot = 0;
@@ -93,15 +93,6 @@ void BrushFace::InitTexCoordSys()
 	tc_sys.index = best_idx;
 	tc_sys.x_axis = BASE_AXES[best_idx * 3 + 1];
 	tc_sys.y_axis = BASE_AXES[best_idx * 3 + 2];
-
-	// fix back faces
-	assert(vertices.size() > 2);
-	auto& z_axis = BASE_AXES[tc_sys.index * 3 + 0];
-	// todo: mirror x axis, so normal should be opposite direction
-	//if (normal.Dot(z_axis) < -SM_LARGE_EPSILON) {
-	if (normal.Dot(/*z_axis*/normal) > SM_LARGE_EPSILON) {
-		std::reverse(std::begin(vertices), std::end(vertices));
-	}
 }
 
 sm::vec2 BrushFace::CalcTexCoords(const sm::vec3& pos, float tex_w, float tex_h) const
