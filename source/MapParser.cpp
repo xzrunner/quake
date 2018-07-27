@@ -352,14 +352,15 @@ void MapParser::ParseFace()
     const size_t line = token.Line();
     const size_t column = token.Column();
 
+	// quake vertices order is clockwise
     Expect(MapToken::OParenthesis, token);
     const sm::vec3 p1 = ParseVector();
     Expect(MapToken::CParenthesis, token = m_tokenizer.NextToken());
     Expect(MapToken::OParenthesis, token = m_tokenizer.NextToken());
-    const sm::vec3 p2 = ParseVector();
+	const sm::vec3 p2 = ParseVector();
     Expect(MapToken::CParenthesis, token = m_tokenizer.NextToken());
     Expect(MapToken::OParenthesis, token = m_tokenizer.NextToken());
-    const sm::vec3 p3 = ParseVector();
+	const sm::vec3 p3 = ParseVector();
     Expect(MapToken::CParenthesis, token = m_tokenizer.NextToken());
 
     // texture names can contain braces etc, so we just read everything until the next opening bracket or number
@@ -442,13 +443,40 @@ void MapParser::ParseFace()
 
 sm::vec3 MapParser::ParseVector()
 {
+	// quake map data uses right-handed coordinate system.
+	//
+	//		z+
+	//		|
+	//		|
+	//		|
+	//		|------- y+
+	//	   /
+	//	  /
+	//	 /
+	//	x+
+	//
+	//       to
+	//
+	//		y+
+	//		|
+	//		|
+	//		|
+	//		|------- z+
+	//	   /
+	//	  /
+	//	 /
+	//	x+
+
 	Token token;
-	sm::vec3 vec;
-	for (size_t i = 0; i < 3; i++) {
-		Expect(MapToken::Integer | MapToken::Decimal, token = m_tokenizer.NextToken());
-		vec[i] = token.ToFloat<float>();
-	}
-	return vec;
+
+	Expect(MapToken::Integer | MapToken::Decimal, token = m_tokenizer.NextToken());
+	float x = token.ToFloat<float>();
+	Expect(MapToken::Integer | MapToken::Decimal, token = m_tokenizer.NextToken());
+	float y = token.ToFloat<float>();
+	Expect(MapToken::Integer | MapToken::Decimal, token = m_tokenizer.NextToken());
+	float z = token.ToFloat<float>();
+
+	return sm::vec3(x, z, y);
 }
 
 void MapParser::ParseExtraAttributes(std::map<std::string, ExtraAttribute>& attributes)

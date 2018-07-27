@@ -149,8 +149,8 @@ void MapBrush::BuildVertices()
 				// Test if the point is outside the brush
 				bool legal = true;
 				for (auto& f : faces) {
-					// black
-					if (f.plane.normal.Dot(v) + f.plane.dist < -SM_LARGE_EPSILON) {
+					// plane front, outside
+					if (f.plane.normal.Dot(v) + f.plane.dist > SM_LARGE_EPSILON) {
 						legal = false;
 						break;
 					}
@@ -167,7 +167,8 @@ void MapBrush::BuildVertices()
 	}
 
 	// sort vertices
-	for (auto& f : faces) {
+	for (auto& f : faces)
+	{
 		assert(f.vertices.size() >= 3);
 		f.SortVertices();
 		f.InitTexCoordSys();
