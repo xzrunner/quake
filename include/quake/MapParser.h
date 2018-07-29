@@ -68,7 +68,7 @@ public:
 
 	void Parse();
 
-	const MapEntity* GetWorldEntity() const;
+	const MapEntityPtr GetWorldEntity() const;
 	auto& GetAllEntities() const { return m_entities; }
 
 	void UpdateFaceTextures();
@@ -116,10 +116,10 @@ private:
 	MapTokenizer    m_tokenizer;
 	MapFormat::Type m_format;
 
-	std::vector<std::unique_ptr<MapEntity>> m_entities;
+	std::vector<std::shared_ptr<MapEntity>> m_entities;
 	int m_world_entry_idx = -1;
 
-	MapEntity* m_curr_entity = nullptr;
+	std::shared_ptr<MapEntity> m_curr_entity = nullptr;
 	std::vector<BrushFace> m_curr_faces;
 
 	typedef MapTokenizer::Token Token;

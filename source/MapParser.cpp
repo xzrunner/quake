@@ -141,10 +141,10 @@ void MapParser::Parse()
 	ParseEntities(MapFormat::Quake2);
 }
 
-const MapEntity* MapParser::GetWorldEntity() const
+const MapEntityPtr MapParser::GetWorldEntity() const
 {
 	return m_world_entry_idx >= 0 ?
-		m_entities[m_world_entry_idx].get() : nullptr;
+		m_entities[m_world_entry_idx] : nullptr;
 }
 
 void MapParser::UpdateFaceTextures()
@@ -516,17 +516,16 @@ std::map<MapToken::Type, std::string> MapParser::TokenNames() const
 void MapParser::BeginEntity(size_t line, const std::vector<EntityAttribute>& attributes,
 	                        const std::map<std::string, ExtraAttribute>& extra_attributes)
 {
-	auto entity = std::make_unique<MapEntity>();
-	m_curr_entity = entity.get();
-	m_entities.push_back(std::move(entity));
+	m_curr_entity = std::make_shared<MapEntity>();
+	m_entities.push_back(m_curr_entity);
 
 	m_curr_entity->attributes = attributes;
 }
 
 void MapParser::EndEntity(size_t start_line, size_t line_count)
 {
-	m_curr_entity->start_line = start_line;
-	m_curr_entity->line_count = line_count;
+	//m_curr_entity->start_line = start_line;
+	//m_curr_entity->line_count = line_count;
 	m_curr_entity = nullptr;
 }
 
