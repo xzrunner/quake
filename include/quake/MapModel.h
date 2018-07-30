@@ -23,12 +23,22 @@ struct TexCoordSystem
 
 }; // TexCoordSystem
 
+struct BrushVertex
+{
+	BrushVertex(const sm::vec3& pos)
+		: pos(pos) {}
+
+	sm::vec3 pos;
+};
+
+using BrushVertexPtr = std::shared_ptr<BrushVertex>;
+
 struct BrushFace
 {
 	std::string tex_name;
 
-	sm::Plane             plane;
-	std::vector<sm::vec3> vertices;
+	sm::Plane plane;
+	std::vector<BrushVertexPtr> vertices;
 
 	// texcoords
 	TexCoordSystem tc_sys;
@@ -42,7 +52,7 @@ struct BrushFace
 
 	sm::vec2 CalcTexCoords(const sm::vec3& pos, float tex_w, float tex_h) const;
 
-	void AddVertex(const sm::vec3& v);
+	bool AddVertex(const BrushVertexPtr& v);
 
 }; // BrushFace
 
@@ -55,6 +65,7 @@ struct MapBrush
 	void BuildGeometry();
 	void RebuildGeometry(const sm::cube& world_bound);
 
+	std::vector<BrushVertexPtr> vertices;
 	std::vector<BrushFace> faces;
 
 	he::PolyhedronPtr geometry = nullptr;

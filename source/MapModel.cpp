@@ -28,7 +28,7 @@ void BrushFace::SortVertices()
 {
 	sm::vec3 center;
 	for (auto& v : vertices) {
-		center += v;
+		center += v->pos;
 	}
 	center /= static_cast<float>(vertices.size());
 
@@ -37,16 +37,16 @@ void BrushFace::SortVertices()
 		float smallest_angle = -1;
 		int   smallest_idx = -1;
 
-		sm::vec3 a = (vertices[i] - center).Normalized();
-		sm::Plane p(vertices[i], center, center + plane.normal);
+		sm::vec3 a = (vertices[i]->pos - center).Normalized();
+		sm::Plane p(vertices[i]->pos, center, center + plane.normal);
 		for (size_t j = i + 1; j < vertices.size(); ++j)
 		{
-			float dis = p.normal.Dot(vertices[j]) + p.dist;
+			float dis = p.normal.Dot(vertices[j]->pos) + p.dist;
 			// black
 			if (dis < -SM_LARGE_EPSILON) {
 				;
 			} else {
-				sm::vec3 b = (vertices[j] - center).Normalized();
+				sm::vec3 b = (vertices[j]->pos - center).Normalized();
 				float angle = a.Dot(b);
 				if (angle > smallest_angle) {
 					smallest_angle = angle;
@@ -69,7 +69,7 @@ void BrushFace::SortVertices()
 
 	// fix back faces
 	assert(vertices.size() > 2);
-	sm::vec3 normal = (vertices[1] - vertices[0]).Cross(vertices[2] - vertices[0]).Normalized();
+	sm::vec3 normal = (vertices[1]->pos - vertices[0]->pos).Cross(vertices[2]->pos - vertices[0]->pos).Normalized();
 	if (normal.Dot(plane.normal) < -SM_LARGE_EPSILON) {
 		std::reverse(std::begin(vertices), std::end(vertices));
 	}
@@ -77,7 +77,7 @@ void BrushFace::SortVertices()
 
 void BrushFace::InitTexCoordSys()
 {
-	sm::vec3 normal = (vertices[1] - vertices[0]).Cross(vertices[2] - vertices[0]).Normalized();
+	sm::vec3 normal = (vertices[1]->pos - vertices[0]->pos).Cross(vertices[2]->pos - vertices[0]->pos).Normalized();
 
 	size_t best_idx = 0;
 	float  best_dot = 0;
@@ -113,14 +113,15 @@ sm::vec2 BrushFace::CalcTexCoords(const sm::vec3& pos, float tex_w, float tex_h)
 	return ret;
 }
 
-void BrushFace::AddVertex(const sm::vec3& v)
+bool BrushFace::AddVertex(const BrushVertexPtr& v)
 {
 	for (auto& vert : vertices) {
-		if (sm::dis_square_pos3_to_pos3(vert, v) < SM_LARGE_EPSILON) {
-			return;
+		if (sm::dis_square_pos3_to_pos3(vert->pos, v->pos) < SM_LARGE_EPSILON) {
+			return false;
 		}
 	}
 	vertices.push_back(v);
+	return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -158,9 +159,13 @@ void MapBrush::BuildVertices()
 
 				if (legal)
 				{
-					faces[i].AddVertex(v);
-					faces[j].AddVertex(v);
-					faces[k].AddVertex(v);
+					auto vertex = std::make_shared<BrushVertex>(v);
+					bool add0 = faces[i].AddVertex(vertex);
+					bool add1 = faces[j].AddVertex(vertex);
+					bool add2 = faces[k].AddVertex(vertex);
+					if (add0 || add1 || add2) {
+						vertices.push_back(vertex);
+					}
 				}
 			}
 		}
@@ -180,7 +185,12 @@ void MapBrush::BuildGeometry()
 	std::vector<std::vector<sm::vec3>> faces_pos;
 	faces_pos.reserve(faces.size());
 	for (auto& face : faces) {
-		faces_pos.push_back(face.vertices);
+		std::vector<sm::vec3> vertices;
+		vertices.reserve(face.vertices.size());
+		for (auto& vert : face.vertices) {
+			vertices.push_back(vert->pos);
+		}
+		faces_pos.push_back(vertices);
 	}
 
 	geometry = std::make_shared<he::Polyhedron>(faces_pos);
