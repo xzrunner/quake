@@ -29,7 +29,8 @@ struct BrushVertex
 		: pos(pos) {}
 
 	sm::vec3 pos;
-};
+
+}; // BrushVertex
 
 using BrushVertexPtr = std::shared_ptr<BrushVertex>;
 
@@ -56,9 +57,11 @@ struct BrushFace
 
 }; // BrushFace
 
+using BrushFacePtr = std::shared_ptr<BrushFace>;
+
 struct MapBrush
 {
-	MapBrush(const std::vector<BrushFace>& faces);
+	MapBrush(const std::vector<BrushFacePtr>& faces);
 
 	void BuildVertices();
 
@@ -66,7 +69,7 @@ struct MapBrush
 	void RebuildGeometry(const sm::cube& world_bound);
 
 	std::vector<BrushVertexPtr> vertices;
-	std::vector<BrushFace> faces;
+	std::vector<BrushFacePtr>   faces;
 
 	he::PolyhedronPtr geometry = nullptr;
 

@@ -128,7 +128,7 @@ bool BrushFace::AddVertex(const BrushVertexPtr& v)
 // class MapBrush
 //////////////////////////////////////////////////////////////////////////
 
-MapBrush::MapBrush(const std::vector<BrushFace>& faces)
+MapBrush::MapBrush(const std::vector<BrushFacePtr>& faces)
 	: faces(faces)
 {
 	//static sm::cube WORLD_BOUND(1024, 1024, 1024);
@@ -143,7 +143,7 @@ void MapBrush::BuildVertices()
 		for (int j = i + 1; j < n - 1; ++j) {
 			for (int k = j + 1; k < n; ++k) {
 				sm::vec3 v;
-				if (!sm::intersect_planes(faces[i].plane, faces[j].plane, faces[k].plane, &v)) {
+				if (!sm::intersect_planes(faces[i]->plane, faces[j]->plane, faces[k]->plane, &v)) {
 					continue;
 				}
 
@@ -151,7 +151,7 @@ void MapBrush::BuildVertices()
 				bool legal = true;
 				for (auto& f : faces) {
 					// plane front, outside
-					if (f.plane.normal.Dot(v) + f.plane.dist > SM_LARGE_EPSILON) {
+					if (f->plane.normal.Dot(v) + f->plane.dist > SM_LARGE_EPSILON) {
 						legal = false;
 						break;
 					}
@@ -160,9 +160,9 @@ void MapBrush::BuildVertices()
 				if (legal)
 				{
 					auto vertex = std::make_shared<BrushVertex>(v);
-					bool add0 = faces[i].AddVertex(vertex);
-					bool add1 = faces[j].AddVertex(vertex);
-					bool add2 = faces[k].AddVertex(vertex);
+					bool add0 = faces[i]->AddVertex(vertex);
+					bool add1 = faces[j]->AddVertex(vertex);
+					bool add2 = faces[k]->AddVertex(vertex);
 					if (add0 || add1 || add2) {
 						vertices.push_back(vertex);
 					}
@@ -174,9 +174,9 @@ void MapBrush::BuildVertices()
 	// sort vertices
 	for (auto& f : faces)
 	{
-		assert(f.vertices.size() >= 3);
-		f.SortVertices();
-		f.InitTexCoordSys();
+		assert(f->vertices.size() >= 3);
+		f->SortVertices();
+		f->InitTexCoordSys();
 	}
 }
 
@@ -186,8 +186,8 @@ void MapBrush::BuildGeometry()
 	faces_pos.reserve(faces.size());
 	for (auto& face : faces) {
 		std::vector<sm::vec3> vertices;
-		vertices.reserve(face.vertices.size());
-		for (auto& vert : face.vertices) {
+		vertices.reserve(face->vertices.size());
+		for (auto& vert : face->vertices) {
 			vertices.push_back(vert->pos);
 		}
 		faces_pos.push_back(vertices);

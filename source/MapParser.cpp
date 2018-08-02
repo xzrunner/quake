@@ -155,7 +155,7 @@ void MapParser::UpdateFaceTextures()
 	for (auto& e : m_entities) {
 		for (auto& b : e->brushes) {
 			for (auto& f : b.faces) {
-				tex_mgr->Query(f.tex_name);
+				tex_mgr->Query(f->tex_name);
 			}
 		}
 	}
@@ -369,38 +369,38 @@ void MapParser::ParseFace()
 		texture_name = "";
 	}
 
-	BrushFace face;
-	face.plane = sm::Plane(p1, p2, p3);
-	face.tex_name = texture_name;
-	std::transform(face.tex_name.begin(), face.tex_name.end(), face.tex_name.begin(), ::tolower);
+	auto face = std::make_shared<BrushFace>();
+	face->plane = sm::Plane(p1, p2, p3);
+	face->tex_name = texture_name;
+	std::transform(face->tex_name.begin(), face->tex_name.end(), face->tex_name.begin(), ::tolower);
     if (m_format == MapFormat::Valve)
 	{
         Expect(MapToken::OBracket, m_tokenizer.NextToken());
         tex_axis_x = ParseVector();
         Expect(MapToken::Integer | MapToken::Decimal, token = m_tokenizer.NextToken());
-		face.offset.x = token.ToFloat<float>();
+		face->offset.x = token.ToFloat<float>();
         Expect(MapToken::CBracket, m_tokenizer.NextToken());
 
         Expect(MapToken::OBracket, m_tokenizer.NextToken());
         tex_axis_y = ParseVector();
         Expect(MapToken::Integer | MapToken::Decimal, token = m_tokenizer.NextToken());
-		face.offset.y = token.ToFloat<float>();
+		face->offset.y = token.ToFloat<float>();
         Expect(MapToken::CBracket, m_tokenizer.NextToken());
     }
 	else
 	{
         Expect(MapToken::Integer | MapToken::Decimal, token = m_tokenizer.NextToken());
-		face.offset.x = token.ToFloat<float>();
+		face->offset.x = token.ToFloat<float>();
         Expect(MapToken::Integer | MapToken::Decimal, token = m_tokenizer.NextToken());
-		face.offset.y = token.ToFloat<float>();
+		face->offset.y = token.ToFloat<float>();
     }
 
     Expect(MapToken::Integer | MapToken::Decimal, token = m_tokenizer.NextToken());
-	face.angle = token.ToFloat<float>();
+	face->angle = token.ToFloat<float>();
     Expect(MapToken::Integer | MapToken::Decimal, token = m_tokenizer.NextToken());
-	face.scale.x = token.ToFloat<float>();
+	face->scale.x = token.ToFloat<float>();
     Expect(MapToken::Integer | MapToken::Decimal, token = m_tokenizer.NextToken());
-	face.scale.y = token.ToFloat<float>();
+	face->scale.y = token.ToFloat<float>();
 
     // We'll be pretty lenient when parsing additional face attributes.
     if (!Check(MapToken::OParenthesis | MapToken::CBrace | MapToken::Eof, m_tokenizer.PeekToken()))
@@ -419,9 +419,9 @@ void MapParser::ParseFace()
             const float surfaceValue = token.ToFloat<float>();
 
     //        if (m_format == MapFormat::Quake2) {
-				//face.setSurfaceContents(surfaceContents);
-				//face.setSurfaceFlags(surfaceFlags);
-				//face.setSurfaceValue(surfaceValue);
+				//face->setSurfaceContents(surfaceContents);
+				//face->setSurfaceFlags(surfaceFlags);
+				//face->setSurfaceValue(surfaceValue);
     //        }
         }
 		else
