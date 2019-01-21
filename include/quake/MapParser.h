@@ -92,7 +92,7 @@ private:
 	sm::vec3 ParseVector();
 	void ParseExtraAttributes(std::map<std::string, ExtraAttribute>& attributes);
 
-	std::map<MapToken::Type, std::string> TokenNames() const override;
+	virtual std::map<MapToken::Type, std::string> TokenNames() const override;
 
 private:
 	enum EntityType
