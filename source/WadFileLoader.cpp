@@ -108,7 +108,7 @@ void WadFileLoader::Load(const std::string& wad_filepath)
 			unsigned char* rgb = new unsigned char[rgb_sz];
 			m_palette.IndexedToRgb((unsigned char*)buf + offset[i], pixel_sz, rgb);
 
-			rc.UpdateTexture(tex_id, rgb, mip_w, mip_h, 0, i, ur::TEXTURE_WARP_REPEAT);
+			rc.UpdateTexture(tex_id, rgb, mip_w, mip_h, 0, i);
 			delete[] rgb;
 
 			mip_w /= 2;
