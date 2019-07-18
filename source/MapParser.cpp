@@ -141,7 +141,7 @@ void MapParser::Parse()
 	ParseEntities(MapFormat::Quake2);
 }
 
-const MapEntityPtr MapParser::GetWorldEntity() const
+const std::shared_ptr<MapEntity> MapParser::GetWorldEntity() const
 {
 	return m_world_entry_idx >= 0 ?
 		m_entities[m_world_entry_idx] : nullptr;
@@ -369,7 +369,7 @@ void MapParser::ParseFace()
 		texture_name = "";
 	}
 
-	auto face = std::make_shared<BrushFace>();
+	auto face = std::make_shared<pm3::BrushFace>();
 	face->plane = sm::Plane(p1, p2, p3);
 	face->tex_name = texture_name;
 	std::transform(face->tex_name.begin(), face->tex_name.end(), face->tex_name.begin(), ::tolower);

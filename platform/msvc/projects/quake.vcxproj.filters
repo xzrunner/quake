@@ -11,9 +11,6 @@
     <ClCompile Include="..\..\..\source\MapAttributes.cpp">
       <Filter>map</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\MapModel.cpp">
-      <Filter>map</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\quake\ColorMap.h" />
@@ -27,7 +24,7 @@
     <ClInclude Include="..\..\..\include\quake\MapAttributes.h">
       <Filter>map</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\quake\MapModel.h">
+    <ClInclude Include="..\..\..\include\quake\MapEntity.h">
       <Filter>map</Filter>
     </ClInclude>
   </ItemGroup>

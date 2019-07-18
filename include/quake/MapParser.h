@@ -1,12 +1,11 @@
-// Code from https://github.com/kduske/TrenchBroom
-
 #pragma once
 
-#include "quake/MapModel.h"
+#include "quake/MapEntity.h"
 
 #include <lexer/Tokenizer.h>
 #include <lexer/Parser.h>
 #include <SM_Vector.h>
+#include <polymesh3/Brush.h>
 
 #include <vector>
 #include <set>
@@ -68,7 +67,7 @@ public:
 
 	void Parse();
 
-	const MapEntityPtr GetWorldEntity() const;
+	const std::shared_ptr<MapEntity> GetWorldEntity() const;
 	auto& GetAllEntities() const { return m_entities; }
 
 	void UpdateFaceTextures();
@@ -120,7 +119,7 @@ private:
 	int m_world_entry_idx = -1;
 
 	std::shared_ptr<MapEntity> m_curr_entity = nullptr;
-	std::vector<BrushFacePtr> m_curr_faces;
+	std::vector<pm3::BrushFacePtr> m_curr_faces;
 
 	typedef MapTokenizer::Token Token;
 
