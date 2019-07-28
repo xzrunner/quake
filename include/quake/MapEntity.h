@@ -2,10 +2,10 @@
 
 #include "quake/MapAttributes.h"
 
-#include <polymesh3/Brush.h>
-
 #include <vector>
 #include <memory>
+
+namespace pm3 { struct Brush; }
 
 namespace quake
 {

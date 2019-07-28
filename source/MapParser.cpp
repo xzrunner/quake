@@ -3,6 +3,7 @@
 #include "quake/TextureManager.h"
 
 #include <lexer/Exception.h>
+#include <polymesh3/Brush.h>
 
 #include <set>
 #include <algorithm>

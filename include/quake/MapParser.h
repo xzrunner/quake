@@ -5,7 +5,7 @@
 #include <lexer/Tokenizer.h>
 #include <lexer/Parser.h>
 #include <SM_Vector.h>
-#include <polymesh3/Brush.h>
+#include <polymesh3/typedef.h>
 
 #include <vector>
 #include <set>
