@@ -12,8 +12,8 @@ namespace quake
 
 struct MapEntity
 {
-	std::vector<EntityAttribute> attributes;
-	std::vector<pm3::Brush>      brushes;
+	std::vector<EntityAttribute>             attributes;
+	std::vector<std::shared_ptr<pm3::Brush>> brushes;
 
 	//size_t start_line;
 	//size_t line_count;

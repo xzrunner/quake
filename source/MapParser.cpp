@@ -155,7 +155,7 @@ void MapParser::UpdateFaceTextures()
 	auto tex_mgr = TextureManager::Instance();
 	for (auto& e : m_entities) {
 		for (auto& b : e->brushes) {
-			for (auto& f : b.faces) {
+			for (auto& f : b->faces) {
 				tex_mgr->Query(f->tex_name);
 			}
 		}
@@ -538,7 +538,8 @@ void MapParser::BeginBrush(size_t line)
 void MapParser::EndBrush(size_t start_line, size_t line_count,
 	                     const std::map<std::string, ExtraAttribute>& extra_attributes)
 {
-	m_curr_entity->brushes.emplace_back(m_curr_faces);
+    auto brush = std::make_shared<pm3::Brush>(m_curr_faces);
+	m_curr_entity->brushes.emplace_back(brush);
 	m_curr_faces.clear();
 }
 
