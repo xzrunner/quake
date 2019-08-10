@@ -3,7 +3,7 @@
 #include "quake/TextureManager.h"
 
 #include <lexer/Exception.h>
-#include <polymesh3/Brush.h>
+#include <polymesh3/Geometry.h>
 
 #include <set>
 #include <algorithm>
@@ -155,8 +155,8 @@ void MapParser::UpdateFaceTextures()
 	auto tex_mgr = TextureManager::Instance();
 	for (auto& e : m_entities) {
 		for (auto& b : e->brushes) {
-			for (auto& f : b->faces) {
-				tex_mgr->Query(f->tex_name);
+			for (auto& f : b->Faces()) {
+				tex_mgr->Query(f->tex_map.tex_name);
 			}
 		}
 	}
@@ -370,38 +370,38 @@ void MapParser::ParseFace()
 		texture_name = "";
 	}
 
-	auto face = std::make_shared<pm3::BrushFace>();
+	auto face = std::make_shared<pm3::Face>();
 	face->plane = sm::Plane(p1, p2, p3);
-	face->tex_name = texture_name;
-	std::transform(face->tex_name.begin(), face->tex_name.end(), face->tex_name.begin(), ::tolower);
+	face->tex_map.tex_name = texture_name;
+	std::transform(face->tex_map.tex_name.begin(), face->tex_map.tex_name.end(), face->tex_map.tex_name.begin(), ::tolower);
     if (m_format == MapFormat::Valve)
 	{
         Expect(MapToken::OBracket, m_tokenizer.NextToken());
         tex_axis_x = ParseVector();
         Expect(MapToken::Integer | MapToken::Decimal, token = m_tokenizer.NextToken());
-		face->offset.x = token.ToFloat<float>();
+		face->tex_map.offset.x = token.ToFloat<float>();
         Expect(MapToken::CBracket, m_tokenizer.NextToken());
 
         Expect(MapToken::OBracket, m_tokenizer.NextToken());
         tex_axis_y = ParseVector();
         Expect(MapToken::Integer | MapToken::Decimal, token = m_tokenizer.NextToken());
-		face->offset.y = token.ToFloat<float>();
+		face->tex_map.offset.y = token.ToFloat<float>();
         Expect(MapToken::CBracket, m_tokenizer.NextToken());
     }
 	else
 	{
         Expect(MapToken::Integer | MapToken::Decimal, token = m_tokenizer.NextToken());
-		face->offset.x = token.ToFloat<float>();
+		face->tex_map.offset.x = token.ToFloat<float>();
         Expect(MapToken::Integer | MapToken::Decimal, token = m_tokenizer.NextToken());
-		face->offset.y = token.ToFloat<float>();
+		face->tex_map.offset.y = token.ToFloat<float>();
     }
 
     Expect(MapToken::Integer | MapToken::Decimal, token = m_tokenizer.NextToken());
-	face->angle = token.ToFloat<float>();
+	face->tex_map.angle = token.ToFloat<float>();
     Expect(MapToken::Integer | MapToken::Decimal, token = m_tokenizer.NextToken());
-	face->scale.x = token.ToFloat<float>();
+	face->tex_map.scale.x = token.ToFloat<float>();
     Expect(MapToken::Integer | MapToken::Decimal, token = m_tokenizer.NextToken());
-	face->scale.y = token.ToFloat<float>();
+	face->tex_map.scale.y = token.ToFloat<float>();
 
     // We'll be pretty lenient when parsing additional face attributes.
     if (!Check(MapToken::OParenthesis | MapToken::CBrace | MapToken::Eof, m_tokenizer.PeekToken()))
@@ -538,8 +538,8 @@ void MapParser::BeginBrush(size_t line)
 void MapParser::EndBrush(size_t start_line, size_t line_count,
 	                     const std::map<std::string, ExtraAttribute>& extra_attributes)
 {
-    auto brush = std::make_shared<pm3::Brush>(m_curr_faces);
-	m_curr_entity->brushes.emplace_back(brush);
+    auto poly = std::make_shared<pm3::Polytope>(m_curr_faces);
+	m_curr_entity->brushes.emplace_back(poly);
 	m_curr_faces.clear();
 }
 
