@@ -3,7 +3,7 @@
 #include "quake/TextureManager.h"
 
 #include <lexer/Exception.h>
-#include <polymesh3/Geometry.h>
+#include <polymesh3/Polytope.h>
 
 #include <set>
 #include <algorithm>
@@ -370,7 +370,7 @@ void MapParser::ParseFace()
 		texture_name = "";
 	}
 
-	auto face = std::make_shared<pm3::Face>();
+	auto face = std::make_shared<pm3::Polytope::Face>();
 	face->plane = sm::Plane(p1, p2, p3);
 	face->tex_map.tex_name = texture_name;
 	std::transform(face->tex_map.tex_name.begin(), face->tex_map.tex_name.end(), face->tex_map.tex_name.begin(), ::tolower);

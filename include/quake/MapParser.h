@@ -5,7 +5,7 @@
 #include <lexer/Tokenizer.h>
 #include <lexer/Parser.h>
 #include <SM_Vector.h>
-#include <polymesh3/typedef.h>
+#include <polymesh3/Polytope.h>
 
 #include <vector>
 #include <set>
@@ -119,7 +119,7 @@ private:
 	int m_world_entry_idx = -1;
 
 	std::shared_ptr<MapEntity> m_curr_entity = nullptr;
-	std::vector<pm3::FacePtr>  m_curr_faces;
+	std::vector<pm3::Polytope::FacePtr>  m_curr_faces;
 
 	typedef MapTokenizer::Token Token;
 
