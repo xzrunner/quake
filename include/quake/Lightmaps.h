@@ -1,10 +1,12 @@
 #pragma once
 
 #include <cu/cu_macro.h>
-#include <unirender/Texture.h>
+#include <unirender2/typedef.h>
 
 #include <cstdint>
 #include <memory>
+
+namespace ur2 { class Device; }
 
 namespace quake
 {
@@ -16,7 +18,7 @@ public:
 
 	uint8_t* Query(int tex_idx, int x, int y);
 
-	void CreatetTextures();
+	void CreatetTextures(const ur2::Device& dev);
 
 	unsigned int GetTexID(int idx) const;
 
@@ -36,7 +38,7 @@ private:
 
 	uint8_t m_lightmaps[MAX_LIGHTMAPS * BPP * BLOCK_WIDTH * BLOCK_HEIGHT];
 
-	ur::TexturePtr m_textures[MAX_LIGHTMAPS];
+	ur2::TexturePtr m_textures[MAX_LIGHTMAPS];
 
 	CU_SINGLETON_DECLARATION(Lightmaps);
 

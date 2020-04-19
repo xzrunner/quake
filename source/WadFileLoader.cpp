@@ -3,9 +3,8 @@
 #include "quake/Palette.h"
 
 #include <bs/ImportStream.h>
-#include <unirender/Blackboard.h>
-#include <unirender/RenderContext.h>
-#include <unirender/Texture.h>
+#include <unirender2/Device.h>
+#include <unirender2/Bitmap.h>
 
 #include <fstream>
 #include <vector>
@@ -55,7 +54,7 @@ WadFileLoader::WadFileLoader(const Palette& palette)
 {
 }
 
-void WadFileLoader::Load(const std::string& wad_filepath)
+void WadFileLoader::Load(const ur2::Device& dev, const std::string& wad_filepath)
 {
 	std::ifstream fin(wad_filepath, std::ios::binary);
 	if (fin.fail()) {
@@ -91,31 +90,19 @@ void WadFileLoader::Load(const std::string& wad_filepath)
 		std::string name = is.String(NAME_LEN);
 		uint32_t width = is.UInt32();
 		uint32_t height = is.UInt32();
-		size_t offset[MIP_LEVEL];
-		for (int i = 0; i < MIP_LEVEL; ++i) {
-			offset[i] = is.UInt32();
-		}
 
-		uint32_t mip_w = width;
-		uint32_t mip_h = height;
+        size_t offset[MIP_LEVEL];
+        for (int i = 0; i < MIP_LEVEL; ++i) {
+            offset[i] = is.UInt32();
+        }
 
-		auto& rc = ur::Blackboard::Instance()->GetRenderContext();
-		int tex_id = rc.CreateTextureID(width, height, ur::TEXTURE_RGB, MIP_LEVEL);
-		for (int i = 0; i < MIP_LEVEL; ++i)
-		{
-			size_t pixel_sz = mip_w * mip_h;
-			size_t rgb_sz = pixel_sz * 3;
-			unsigned char* rgb = new unsigned char[rgb_sz];
-			m_palette.IndexedToRgb((unsigned char*)buf + offset[i], pixel_sz, rgb);
-
-			rc.UpdateTexture(tex_id, rgb, mip_w, mip_h, 0, i);
-			delete[] rgb;
-
-			mip_w /= 2;
-			mip_h /= 2;
-		}
-
-		auto tex = std::make_shared<ur::Texture>(&rc, width, height, ur::TEXTURE_RGB, tex_id);
+        const int channels = 3;
+        size_t size = width * height * channels;
+        unsigned char* pixels = new unsigned char[size];
+        m_palette.IndexedToRgb((unsigned char*)buf + offset[0], size, pixels);
+        auto bmp = std::make_shared<ur2::Bitmap>(width, height, channels, pixels);
+        auto tex = dev.CreateTexture(*bmp, ur2::TextureFormat::RGB);
+        delete[] pixels;
 		TextureManager::Instance()->Add(name, tex);
 	}
 

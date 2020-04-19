@@ -1,7 +1,6 @@
 #include "quake/Lightmaps.h"
 
-#include <unirender/Texture.h>
-#include <unirender/Blackboard.h>
+#include <unirender2/Texture.h>
 #include <model/TextureLoader.h>
 
 #include <string.h>
@@ -68,9 +67,8 @@ uint8_t* Lightmaps::Query(int tex_idx, int x, int y)
 	return base;
 }
 
-void Lightmaps::CreatetTextures()
+void Lightmaps::CreatetTextures(const ur2::Device& dev)
 {
-	auto& rc = ur::Blackboard::Instance()->GetRenderContext();
 	for (int i = 0; i < MAX_LIGHTMAPS; ++i)
 	{
 		if (!m_allocated[i][0]) {
@@ -78,14 +76,14 @@ void Lightmaps::CreatetTextures()
 		}
 
 		auto data = m_lightmaps + i * BLOCK_WIDTH * BLOCK_HEIGHT * BPP;
-		m_textures[i] = model::TextureLoader::LoadFromMemory(data, BLOCK_WIDTH, BLOCK_HEIGHT, BPP);
+		m_textures[i] = model::TextureLoader::LoadFromMemory(dev, data, BLOCK_WIDTH, BLOCK_HEIGHT, BPP);
 	}
 }
 
 unsigned int Lightmaps::GetTexID(int idx) const
 {
 	if (idx >= 0 && idx < MAX_LIGHTMAPS && m_textures[idx]) {
-		return m_textures[idx]->TexID();
+		return m_textures[idx]->GetTexID();
 	} else {
 		return 0;
 	}
