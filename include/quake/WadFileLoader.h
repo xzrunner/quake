@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace ur2 { class Device; }
+namespace ur { class Device; }
 
 namespace quake
 {
@@ -14,7 +14,7 @@ class WadFileLoader
 public:
 	WadFileLoader(const Palette& palette);
 
-	void Load(const ur2::Device& dev,
+	void Load(const ur::Device& dev,
         const std::string& wad_filepath);
 
 private:

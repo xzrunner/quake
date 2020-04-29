@@ -3,8 +3,8 @@
 #include "quake/Palette.h"
 
 #include <bs/ImportStream.h>
-#include <unirender2/Device.h>
-#include <unirender2/Bitmap.h>
+#include <unirender/Device.h>
+#include <unirender/Bitmap.h>
 
 #include <fstream>
 #include <vector>
@@ -54,7 +54,7 @@ WadFileLoader::WadFileLoader(const Palette& palette)
 {
 }
 
-void WadFileLoader::Load(const ur2::Device& dev, const std::string& wad_filepath)
+void WadFileLoader::Load(const ur::Device& dev, const std::string& wad_filepath)
 {
 	std::ifstream fin(wad_filepath, std::ios::binary);
 	if (fin.fail()) {
@@ -100,8 +100,8 @@ void WadFileLoader::Load(const ur2::Device& dev, const std::string& wad_filepath
         size_t size = width * height * channels;
         unsigned char* pixels = new unsigned char[size];
         m_palette.IndexedToRgb((unsigned char*)buf + offset[0], size, pixels);
-        auto bmp = std::make_shared<ur2::Bitmap>(width, height, channels, pixels);
-        auto tex = dev.CreateTexture(*bmp, ur2::TextureFormat::RGB);
+        auto bmp = std::make_shared<ur::Bitmap>(width, height, channels, pixels);
+        auto tex = dev.CreateTexture(*bmp, ur::TextureFormat::RGB);
         delete[] pixels;
 		TextureManager::Instance()->Add(name, tex);
 	}

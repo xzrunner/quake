@@ -1,6 +1,6 @@
 #include "quake/Lightmaps.h"
 
-#include <unirender2/Texture.h>
+#include <unirender/Texture.h>
 #include <model/TextureLoader.h>
 
 #include <string.h>
@@ -67,7 +67,7 @@ uint8_t* Lightmaps::Query(int tex_idx, int x, int y)
 	return base;
 }
 
-void Lightmaps::CreatetTextures(const ur2::Device& dev)
+void Lightmaps::CreatetTextures(const ur::Device& dev)
 {
 	for (int i = 0; i < MAX_LIGHTMAPS; ++i)
 	{
