@@ -4,7 +4,6 @@
 
 #include <bs/ImportStream.h>
 #include <unirender/Device.h>
-#include <unirender/Bitmap.h>
 
 #include <fstream>
 #include <vector>
@@ -100,8 +99,7 @@ void WadFileLoader::Load(const ur::Device& dev, const std::string& wad_filepath)
         size_t size = width * height * channels;
         unsigned char* pixels = new unsigned char[size];
         m_palette.IndexedToRgb((unsigned char*)buf + offset[0], size, pixels);
-        auto bmp = std::make_shared<ur::Bitmap>(width, height, channels, pixels);
-        auto tex = dev.CreateTexture(*bmp, ur::TextureFormat::RGB);
+        auto tex = dev.CreateTexture(width, height, ur::TextureFormat::RGB, pixels, width * height * channels);
         delete[] pixels;
 		TextureManager::Instance()->Add(name, tex);
 	}
